@@ -1,0 +1,82 @@
+% Created 2018-09-23 Son 21:57
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{david}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={david},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 25.2.1 (Org mode 9.1.7)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+
+\section{Notes on style transfer}
+\label{sec:orgd247561}
+
+Let \(x_s\), \(x_c\), \(x_p\) be the vector representation of the style, content and
+pastiche pictures. The goal is to generate \(x_p\) as function of \(x_s\) and
+\(x_c\).
+
+Suppose that \(x_i \in \mathcal{F}\), where \(\mathcal{F}\) is the space of
+possible input of \(x_i\), \(i \in \{x, c, p}\). Let \(f: \mathcal{F} \to
+  \mathbb{R}^{n}\) be an encoding function of the picture.
+
+Let \(g_\theta: \mathbb{R}^n \to \mathcal{F}\) define the decoder. Then 
+
+$$ x_p = h(x_c, x_s) = g_\theta(f(x_c), f(x_s)) $$
+
+The challenge is to construct \(g_\theta\) and to train it. As with most deep
+learning application, we will optimize the parameters \(\theta\) such that it
+minimize loss build in a careful manner. 
+
+Define \(\mathcal{L} = (\mathcal{L}_c, \mathcal{L}_s,
+  \mathcal{L}_{tv})\) as the vector of content, style and total variation loss.
+
+\subsection{Content Loss}
+\label{sec:orgd318256}
+
+Let \(y = f(x)\), be the output of the encoder. Then define \(\mu_i, \sigma_i\) be
+the mean and variance of \(f(x_i)\) for \(i \in \{c, s}\).
+
+$$ y_{cs} = \alpha f(x_c) + (1-\alpha) \sigma_s [\{f(x_c) - \mu_c\}/\sigma_c]  + \mu_s $$
+
+Then the content loss is defined as 
+
+$$ \mathcal{L_c} = \frac{1}{n} \sum_{i=1}^n \{f(x_p) - z_cs\}^2$$
+
+\subsection{Style loss}
+\label{sec:orgc946167}
+
+Let \(S(x) = (S_1(x), \dots, S_k(x))\) be a summary statistics of
+\(x\), e.g. S(x) = (mu(x), \(\sigma_{\text{x}}\))\$. Then the style loss is defined
+as
+
+$$\frac{1}{k}\sum_{i=1}^k [S\{f(x_p)\} - S\{f(x_s)\}]^2.$$
+
+
+The network then optimize \(\sum_{i \in {c, s, tv}} \alpha_i \mathcal{L}_i\),
+where \(\alpha\) are the weights given to each loss.
+
+In practice, the encoder is usually the some of several (dependent) encoders
+and the loss is applied to each of these encoder. For example, each
+intermediate layer from convolutionnal network trained to perform
+classification can be considered as an encoder.
+\end{document}

@@ -1,0 +1,23 @@
+# Images
+datasets/*
+
+
+# Model output
+*.h5
+
+# Checkpoint 
+notebooks/*/*.png
+*/logs/*
+
+*nohup.out
+
+notebooks/output/sample_images/*
+
+data/cats/*
+data/content_private/*
+data/data_records/*
+data/wikiart/*
+
+notebooks/vgg19_autoencoder_block4_conv1/*
+notebooks/vgg19_autoencoder_new/*
+
